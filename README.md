@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Rose Run 🌹 - New Style</title>
+<title>Rose Run 🌹 - Gesture Control</title>
 <style>
   :root {
     --bg-pink: #fcebed;
@@ -13,94 +13,102 @@
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  body { background: var(--bg-pink); display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+  body { background: var(--bg-pink); display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; touch-action: none; }
 
   #game-frame {
-    width: 100%; max-width: 400px; height: 92vh;
+    width: 100%; max-width: 430px; height: 95vh;
     background: #fff; position: relative;
     border: 8px solid #fff; outline: 2px solid var(--line-pink);
     border-radius: 40px; overflow: hidden;
     display: flex; flex-direction: column;
   }
 
-  /* 게임 화면 */
-  #stage { flex: 1; position: relative; background: linear-gradient(to bottom, #fff, var(--bg-pink)); overflow: hidden; }
+  /* 게임 화면 영역 */
+  #stage { 
+    flex: 1; position: relative; 
+    background: linear-gradient(to bottom, #fff, var(--bg-pink)); 
+    overflow: hidden; z-index: 1;
+  }
   
-  /* 캐릭터 스타일 */
+  /* 안내 문구 UI */
+  .guide-layer {
+    position: absolute; bottom: 20px; width: 100%; text-align: center;
+    color: var(--dark-pink); font-size: 14px; font-weight: bold; opacity: 0.6;
+  }
+
+  /* 캐릭터 */
   #player {
-    position: absolute; bottom: 50px; left: 60px;
-    width: 80px; height: 100px; z-index: 10;
-    transition: transform 0.2s, height 0.2s;
-    transform-origin: bottom;
+    position: absolute; bottom: 60px; left: 70px;
+    width: 80px; height: 110px; z-index: 10;
+    transition: transform 0.15s; transform-origin: bottom;
   }
 
-  /* 가시 덩굴 (바닥/천장) */
+  /* 가시 장애물 */
   .thorn {
-    position: absolute; width: 40px; height: 0px; 
-    background: #9a6f79; border: 2px solid #7a5a61;
-    transition: height 0.3s ease-out; z-index: 5;
+    position: absolute; width: 45px; background: #9a6f79; 
+    border: 2px solid #7a5a61; z-index: 5;
   }
-  .thorn.bottom { bottom: 50px; border-radius: 20px 20px 0 0; }
-  .thorn.top { top: 0; border-radius: 0 0 20px 20px; }
+  .thorn.bottom { bottom: 60px; border-radius: 20px 20px 5px 5px; }
+  .thorn.top { top: 0; border-radius: 5px 5px 20px 20px; }
 
-  /* 컨트롤러 */
-  .controls { padding: 20px 25px 40px; display: flex; justify-content: space-between; align-items: center; background: #fff; z-index: 20; }
-  .btn-circle { width: 75px; height: 75px; background: #fff; border: 2px solid var(--line-pink); border-radius: 50%; display: flex; flex-direction: column; justify-content: center; align-items: center; color: var(--dark-pink); font-weight: bold; font-size: 12px; box-shadow: 0 4px 0 var(--line-pink); cursor: pointer; }
-  .btn-start { flex: 1; height: 60px; margin: 0 15px; background: #fff; border: 2px solid var(--line-pink); border-radius: 15px; color: var(--dark-pink); font-size: 22px; font-weight: 900; box-shadow: 0 5px 0 var(--line-pink); cursor: pointer; }
+  /* 애니메이션 */
+  .jumping { animation: jump-gesture 0.65s ease-out; }
+  .sliding { transform: scaleY(0.55); } 
 
-  /* 애니메이션 상태 */
-  .jumping { animation: jump-action 0.7s forwards; }
-  .sliding { transform: scaleY(0.5); } /* 슬라이드 시 키가 절반으로 */
-
-  @keyframes jump-action {
-    0%, 100% { bottom: 50px; }
-    50% { bottom: 200px; }
+  @keyframes jump-gesture {
+    0%, 100% { bottom: 60px; }
+    50% { bottom: 230px; }
   }
 
-  #msg { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 100; text-align: center; display: none; background: #fff; padding: 25px; border-radius: 25px; border: 3px solid var(--line-pink); }
+  /* HUD */
+  .hud { padding: 50px 25px 10px; display: flex; justify-content: space-between; align-items: center; z-index: 20; }
+  .score-text { color: var(--dark-pink); font-size: 20px; font-weight: 900; }
+
+  #overlay {
+    position: absolute; inset: 0; background: rgba(255,255,255,0.8);
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    z-index: 100; text-align: center;
+  }
+  .start-btn {
+    margin-top: 20px; padding: 15px 40px; background: #fff;
+    border: 2px solid var(--line-pink); border-radius: 20px;
+    color: var(--dark-pink); font-size: 24px; font-weight: bold;
+    box-shadow: 0 5px 0 var(--line-pink); cursor: pointer;
+  }
 </style>
 </head>
 <body>
 
 <div id="game-frame">
-  <div style="padding: 40px 20px 10px; display: flex; justify-content: space-between;">
-    <div style="color:var(--dark-pink); font-weight:bold;">Score: <span id="score">0</span></div>
+  <div id="overlay">
+    <h1 style="color:var(--dark-pink); font-size: 40px;">Rose Run</h1>
+    <p style="color:#9a6f79; margin-top:10px;">탭: 점프 / 누르기: 슬라이드</p>
+    <div class="start-btn" onclick="startGame()">START</div>
+  </div>
+
+  <div class="hud">
+    <div class="score-text">🌹 <span id="score">0</span></div>
+    <div style="font-size: 24px; color: var(--line-pink);">⏸</div>
   </div>
 
   <div id="stage">
-    <div id="msg">
-        <h2 style="color:var(--dark-pink);">GAME OVER</h2>
-        <button onclick="startGame()" style="margin-top:10px; border:none; background:var(--main-pink); color:#fff; padding:8px 20px; border-radius:10px;">RETRY</button>
-    </div>
-    
+    <div class="guide-layer">TAP TO JUMP / HOLD TO SLIDE</div>
     <div id="player">
-      <svg viewBox="0 0 100 120">
-        <!-- 귀여운 빵모자 -->
-        <ellipse cx="50" cy="25" rx="35" ry="15" fill="#d8909f" stroke="#9a6f79" stroke-width="1"/>
-        <circle cx="50" cy="15" r="4" fill="#fff" stroke="#d8909f" stroke-width="1"/>
-        
-        <!-- 얼굴 -->
-        <rect x="30" y="35" width="40" height="35" rx="10" fill="#fbe3d6" stroke="#9a6f79" stroke-width="1.2"/>
-        <circle cx="62" cy="52" r="1.5" fill="#5c4a44"/>
-        
-        <!-- 멜빵 치마 (Skirt) -->
-        <path d="M35 70 L65 70 L75 95 H25 Z" fill="#f9d5db" stroke="#9a6f79" stroke-width="1.2"/>
-        <rect x="42" y="70" width="3" height="10" fill="#d8909f"/>
-        <rect x="55" y="70" width="3" height="10" fill="#d8909f"/>
-        
-        <!-- 다리 & 꽃 -->
-        <path d="M62 78 Q75 78 80 85" fill="none" stroke="#fbe3d6" stroke-width="4" stroke-linecap="round"/>
-        <text x="75" y="90" font-size="14">💐</text>
-        <rect x="42" y="95" width="6" height="10" fill="#fbe3d6"/>
-        <rect x="52" y="95" width="6" height="10" fill="#fbe3d6"/>
+      <svg viewBox="0 0 100 130">
+        <!-- 모자 & 얼굴 -->
+        <ellipse cx="50" cy="20" rx="30" ry="12" fill="#d8909f" stroke="#9a6f79"/>
+        <rect x="30" y="30" width="40" height="40" rx="10" fill="#fbe3d6" stroke="#9a6f79"/>
+        <circle cx="62" cy="48" r="1.5" fill="#5c4a44"/>
+        <!-- 멜빵 치마 -->
+        <path d="M32 70 L68 70 L78 105 H22 Z" fill="#f9d5db" stroke="#9a6f79"/>
+        <rect x="40" y="70" width="3" height="15" fill="#d8909f"/>
+        <rect x="57" y="70" width="3" height="15" fill="#d8909f"/>
+        <!-- 꽃 & 다리 -->
+        <text x="75" y="90" font-size="16">💐</text>
+        <rect x="42" y="105" width="6" height="12" fill="#fbe3d6" stroke="#9a6f79"/>
+        <rect x="52" y="105" width="6" height="12" fill="#fbe3d6" stroke="#9a6f79"/>
       </svg>
     </div>
-  </div>
-
-  <div class="controls">
-    <div class="btn-circle" onmousedown="jump()" ontouchstart="jump()">JUMP<br>🎀</div>
-    <button class="btn-start" onclick="startGame()">START</button>
-    <div class="btn-circle" onmousedown="startSlide()" onmouseup="stopSlide()" ontouchstart="startSlide()" ontouchend="stopSlide()">SLIDE<br>🎀</div>
   </div>
 </div>
 
@@ -108,48 +116,59 @@
   const player = document.getElementById('player');
   const stage = document.getElementById('stage');
   const scoreEl = document.getElementById('score');
-  const msg = document.getElementById('msg');
+  const overlay = document.getElementById('overlay');
+  
   let score = 0;
   let isGameOver = true;
-  let gameTimer;
+  let gameLoop;
 
-  function jump() {
-    if (isGameOver || player.classList.contains('jumping') || player.classList.contains('sliding')) return;
-    player.classList.add('jumping');
-    setTimeout(() => player.classList.remove('jumping'), 700);
-  }
-
-  function startSlide() {
-    if (isGameOver || player.classList.contains('jumping')) return;
-    player.classList.add('sliding');
-  }
-
-  function stopSlide() {
-    player.classList.remove('sliding');
-  }
-
-  function createThorn() {
+  // 조작 로직: 터치 시작(점프 또는 슬라이드 준비)
+  stage.addEventListener('touchstart', (e) => {
     if (isGameOver) return;
-    const isTop = Math.random() > 0.5; // 위/아래 랜덤 생성
+    e.preventDefault();
+    // 슬라이드 판정: 누르고 있으면 슬라이드
+    player.dataset.pressStart = Date.now();
+    player.classList.add('sliding');
+  });
+
+  // 터치 종료(슬라이드 해제 및 짧은 터치 시 점프)
+  stage.addEventListener('touchend', (e) => {
+    if (isGameOver) return;
+    const pressDuration = Date.now() - player.dataset.pressStart;
+    player.classList.remove('sliding');
+    
+    // 짧게 터치(200ms 미만)했을 때만 점프
+    if (pressDuration < 200) {
+      if (!player.classList.contains('jumping')) {
+        player.classList.add('jumping');
+        setTimeout(() => player.classList.remove('jumping'), 650);
+      }
+    }
+  });
+
+  function createObstacle() {
+    if (isGameOver) return;
+    const isTop = Math.random() > 0.5;
     const thorn = document.createElement('div');
     thorn.classList.add('thorn', isTop ? 'top' : 'bottom');
     stage.appendChild(thorn);
 
-    let pos = -50;
-    // 가시가 슝슝 자라나는 효과
-    setTimeout(() => { thorn.style.height = (Math.random() * 80 + 60) + 'px'; }, 10);
+    let pos = -60;
+    const height = Math.random() * 70 + 70;
+    thorn.style.height = height + 'px';
 
     const move = setInterval(() => {
       if (isGameOver) { clearInterval(move); thorn.remove(); return; }
-      pos += 5;
+      pos += 6;
       thorn.style.right = pos + 'px';
 
       const p = player.getBoundingClientRect();
       const t = thorn.getBoundingClientRect();
 
-      // 충돌 판정
-      if (t.left < p.right && t.right > p.left && t.top < p.bottom && t.bottom > p.top) {
-        gameOver();
+      // 충돌 판정 (판정 범위를 살짝 줄여 쾌적하게 함)
+      if (t.left + 10 < p.right - 10 && t.right - 10 > p.left + 10 && 
+          t.top + 10 < p.bottom - 10 && t.bottom - 10 > p.top + 10) {
+        endGame();
       }
 
       if (pos > 450) {
@@ -160,19 +179,21 @@
       }
     }, 20);
 
-    gameTimer = setTimeout(createThorn, 1500);
+    gameLoop = setTimeout(createObstacle, Math.random() * 1500 + 1000);
   }
 
   function startGame() {
-    isGameOver = false; score = 0; scoreEl.innerText = score;
-    msg.style.display = 'none';
-    document.querySelectorAll('.thorn').forEach(t => t.remove());
-    createThorn();
+    isGameOver = false; score = 0; scoreEl.innerText = "0";
+    overlay.style.display = 'none';
+    createObstacle();
   }
 
-  function gameOver() {
-    isGameOver = true; msg.style.display = 'block';
-    clearTimeout(gameTimer);
+  function endGame() {
+    isGameOver = true;
+    overlay.style.display = 'flex';
+    overlay.querySelector('h1').innerText = "Game Over";
+    overlay.querySelector('p').innerText = `최종 점수: ${score}점`;
+    clearTimeout(gameLoop);
   }
 </script>
 </body>
