@@ -2,20 +2,25 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>🌹 ROSE RUN: 프러포즈 대작전 🌹</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>🌹 ROSE RUN Mobile 🌹</title>
 
   <style>
     *{
       margin:0;
       padding:0;
       box-sizing:border-box;
-      font-family:'Arial';
+      font-family:'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+      /* 모바일에서 길게 터치 시 메뉴가 뜨지 않도록 방지 */
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
     }
 
     body{
       overflow:hidden;
       background:#fff0f5;
+      touch-action: none; /* 브라우저 기본 제스처 방지 */
     }
 
     #game{
@@ -30,33 +35,32 @@
       position:absolute;
       bottom:0;
       width:100%;
-      height:100px;
+      height:80px;
       background:#ff8da1;
-      border-top: 5px solid #ff4f87;
+      border-top: 4px solid #ff4f87;
     }
 
-    /* 이미지 캐릭터를 위한 스타일 */
     #player {
       position:absolute;
-      width:100px;
-      height:100px;
-      left:100px;
-      bottom:100px;
-      /* 제공된 이미지 중 꽃다발을 든 소년 부분 위치 지정 */
+      width:80px;
+      height:80px;
+      left:50px;
+      bottom:80px;
       background-image: url('KakaoTalk_20260513_141339739.jpg');
-      background-size: 500px auto; /* 이미지 크기에 맞춰 조절 */
-      background-position: -15px -480px; /* 꽃다발 든 소년 위치(예시) */
+      background-size: 450px auto;
+      background-position: -12px -432px; /* 꽃다발 든 소년 */
       background-repeat: no-repeat;
       z-index: 10;
+      transition: bottom 0.1s linear;
     }
 
     .thorn{
       position:absolute;
-      width:50px;
-      height:50px;
-      bottom:100px;
-      right:-100px;
-      font-size:40px;
+      width:40px;
+      height:40px;
+      bottom:80px;
+      right:-50px;
+      font-size:30px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -64,62 +68,65 @@
 
     .petal{
       position:absolute;
-      font-size:25px;
+      font-size:20px;
       opacity:.6;
       animation:fall linear forwards;
     }
 
     #score{
       position:absolute;
-      top:20px;
-      left:20px;
-      font-size:28px;
+      top:15px;
+      left:15px;
+      font-size:22px;
       font-weight:bold;
       color:#ff4f87;
-      background: rgba(255,255,255,0.7);
-      padding: 10px 20px;
-      border-radius: 30px;
+      background: rgba(255,255,255,0.8);
+      padding: 8px 15px;
+      border-radius: 20px;
+      z-index: 100;
     }
 
     #startText, #gameClear, #gameOver {
       position:absolute;
-      width:100%;
-      top:40%;
+      width:90%;
+      left: 5%;
+      top:35%;
       text-align:center;
       color:#ff4f87;
-      text-shadow:1px 1px 2px rgba(0,0,0,0.1);
+      z-index: 100;
     }
 
-    #gameClear, #gameOver { display: none; }
-
-    /* 클리어 시 나오는 커플 이미지 구역 */
+    /* 클리어 시 나오는 커플 이미지 */
     .couple-img {
-      width: 200px;
-      height: 200px;
-      margin: 0 auto 20px;
+      width: 180px;
+      height: 180px;
+      margin: 0 auto 15px;
       background-image: url('KakaoTalk_20260513_141339739.jpg');
-      background-size: 600px auto;
-      background-position: -20px -470px; /* 꽃다발 같이 든 장면 위치 */
+      background-size: 550px auto;
+      background-position: -20px -430px; /* 꽃다발 같이 든 장면 */
       background-repeat: no-repeat;
-      border: 5px solid white;
+      border: 4px solid white;
       border-radius: 20px;
-      box-shadow: 0 0 20px rgba(255,100,150,0.5);
+      box-shadow: 0 0 15px rgba(255,100,150,0.4);
     }
 
     button {
       margin-top:20px;
-      padding:12px 25px;
+      padding:15px 35px;
       border:none;
-      border-radius:25px;
+      border-radius:30px;
       background:#ff4f87;
       color:white;
-      font-size:18px;
+      font-size:20px;
       cursor:pointer;
       font-weight:bold;
-      transition: transform 0.2s;
+      box-shadow: 0 4px 0 #d13d6a;
     }
-    
-    button:hover { transform: scale(1.1); }
+
+    button:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 #d13d6a;
+    }
 
     @keyframes fall{
       from{ transform:translateY(-50px) rotate(0deg); }
@@ -130,29 +137,27 @@
 <body>
 
 <div id="game">
-  <div id="score">🌹 0 / 500</div>
+  <div id="score">🌹 0 / 300</div>
 
   <div id="startText">
-    <h1 style="font-size: 50px; margin-bottom: 20px;">ROSE RUN</h1>
-    <p style="font-size: 20px;">장미 가시를 피해 그녀에게 꽃을 전달하세요!</p>
-    <p style="font-weight: bold; margin-top: 10px;">[스페이스바] 눌러서 점프 시작</p>
+    <h1 style="font-size: 40px; margin-bottom: 10px;">ROSE RUN</h1>
+    <p>화면을 터치해서 장애물을 넘으세요!</p>
+    <button>게임 시작</button>
   </div>
 
   <div id="player"></div>
   <div id="ground"></div>
 
-  <!-- 게임 오버 화면 -->
   <div id="gameOver">
-    <h1 style="font-size: 50px;">💔 Oops!</h1>
-    <p>가시에 걸려 꽃이 시들었습니다...</p>
-    <button onclick="location.reload()">다시 도전</button>
+    <h1 style="font-size: 40px;">💔 Oops!</h1>
+    <p>장미 가시에 걸렸어요...</p>
+    <button onclick="location.reload()">다시 하기</button>
   </div>
 
-  <!-- 게임 클리어 화면 (꽃다발을 같이 든 커플) -->
   <div id="gameClear">
     <div class="couple-img"></div>
-    <h1 style="font-size: 40px;">💖 SUCCESS! 💖</h1>
-    <p>축하합니다! 소년의 마음이 전달되었습니다.</p>
+    <h1 style="font-size: 35px;">💖 성공! 💖</h1>
+    <p>사랑이 전달되었습니다!</p>
     <button onclick="location.reload()">행복한 재시작</button>
   </div>
 </div>
@@ -170,50 +175,60 @@ let gameStarted = false;
 let isGameOver = false;
 let isGameClear = false;
 let score = 0;
-const targetScore = 500; // 목표 점수
+const targetScore = 300; 
 
-document.addEventListener("keydown", (e) => {
-  if (e.code === "Space") {
-    if (!gameStarted && !isGameOver && !isGameClear) {
-      startGame();
-    }
+// --- 터치 및 키보드 입력 통합 관리 ---
+function handleInput(e) {
+  if (e.type === 'touchstart') e.preventDefault(); // 브라우저 기본 동작 방지
+
+  if (!gameStarted && !isGameOver && !isGameClear) {
+    startGame();
+  } else {
     jump();
   }
+}
+
+// 스페이스바 대응
+document.addEventListener("keydown", (e) => {
+  if (e.code === "Space") handleInput(e);
 });
+
+// 화면 전체 터치 대응
+document.addEventListener("touchstart", handleInput, {passive: false});
 
 function jump() {
   if (jumping || isGameOver || isGameClear) return;
   jumping = true;
 
-  let pos = 100;
+  let pos = 80;
+  let jumpHeight = 0;
   let up = setInterval(() => {
-    if (pos >= 320) {
+    if (jumpHeight >= 150) {
       clearInterval(up);
       let down = setInterval(() => {
-        if (pos <= 100) {
+        if (jumpHeight <= 0) {
           clearInterval(down);
           jumping = false;
         }
-        pos -= 8;
-        player.style.bottom = pos + "px";
-      }, 15);
+        jumpHeight -= 6;
+        player.style.bottom = (pos + jumpHeight) + "px";
+      }, 12);
     }
-    pos += 12;
-    player.style.bottom = pos + "px";
-  }, 15);
+    jumpHeight += 10;
+    player.style.bottom = (pos + jumpHeight) + "px";
+  }, 12);
 }
 
 function startGame() {
   gameStarted = true;
   startText.style.display = "none";
 
-  const thornGen = setInterval(createThorn, 1500);
-  const petalGen = setInterval(createPetal, 600);
+  const thornGen = setInterval(createThorn, 1800);
+  const petalGen = setInterval(createPetal, 700);
 
   const scoreInterval = setInterval(() => {
     if (isGameOver) {
       clearInterval(scoreInterval);
-      clearInterval(thornGen);
       return;
     }
     
@@ -224,7 +239,7 @@ function startGame() {
       return;
     }
 
-    score += 5;
+    score += 2;
     scoreText.innerHTML = `🌹 ${score} / ${targetScore}`;
   }, 100);
 }
@@ -245,13 +260,13 @@ function createThorn() {
       thorn.remove();
     }
 
-    thornX -= 8;
+    thornX -= 6; // 모바일 속도에 맞춰 조정
     thorn.style.left = thornX + "px";
 
     const playerBottom = parseInt(window.getComputedStyle(player).getPropertyValue("bottom"));
 
-    // 충돌 감지
-    if (thornX > 80 && thornX < 140 && playerBottom < 160) {
+    // 충돌 판정 (모바일 최적화)
+    if (thornX > 40 && thornX < 100 && playerBottom < 130) {
       clearInterval(move);
       endGame();
     }
@@ -267,11 +282,11 @@ function createPetal() {
   if (isGameOver || isGameClear) return;
   const petal = document.createElement("div");
   petal.classList.add("petal");
-  petal.innerHTML = Math.random() > 0.5 ? "🌸" : "🌹";
+  petal.innerHTML = "🌸";
   petal.style.left = Math.random() * window.innerWidth + "px";
   petal.style.animationDuration = (Math.random() * 3 + 2) + "s";
   game.appendChild(petal);
-  setTimeout(() => petal.remove(), 5000);
+  setTimeout(() => petal.remove(), 4000);
 }
 
 function endGame() {
@@ -281,7 +296,7 @@ function endGame() {
 
 function winGame() {
   isGameClear = true;
-  player.style.display = "none"; // 기존 플레이어 숨김
+  player.style.display = "none";
   gameClearUI.style.display = "block";
 }
 </script>
