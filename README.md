@@ -5,7 +5,7 @@
 <meta name="viewport"
 content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-<title>🌹 ROSE RUN 🌹</title>
+<title>Rose Run 🌹</title>
 
 <style>
 
@@ -13,35 +13,44 @@ content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable
   margin:0;
   padding:0;
   box-sizing:border-box;
-  touch-action:none;
+  font-family:'Pretendard',sans-serif;
 }
 
 body{
-  background:#222;
+  background:#f7e6ea;
   display:flex;
   justify-content:center;
   align-items:center;
   height:100vh;
   overflow:hidden;
-  font-family:sans-serif;
 }
 
-/* 게임 화면 */
+/* 게임 프레임 */
+
 #game{
   position:relative;
+
   width:430px;
   height:820px;
+
   max-width:100vw;
   max-height:100vh;
+
   overflow:hidden;
 
-  background:linear-gradient(#fff0f5,#ffc1d6);
+  border-radius:32px;
 
-  border-radius:30px;
-  border:6px solid white;
+  background:
+  linear-gradient(
+    rgba(255,248,250,.92),
+    rgba(255,240,244,.95)
+  );
+
+  border:5px solid white;
 }
 
-/* 움직이는 배경 */
+/* 배경 */
+
 #game::before{
 
   content:"";
@@ -50,173 +59,253 @@ body{
   inset:0;
 
   background:
-    repeating-linear-gradient(
-      to right,
-      rgba(255,255,255,.15) 0px,
-      rgba(255,255,255,.15) 40px,
-      transparent 40px,
-      transparent 80px
-    );
 
-  animation:bgMove 2s linear infinite;
+  radial-gradient(circle,#f3c8d2 1px,transparent 1px);
 
-  opacity:.3;
+  background-size:24px 24px;
+
+  opacity:.5;
 }
 
-@keyframes bgMove{
-  from{
-    transform:translateX(0);
-  }
+/* 별 */
 
-  to{
-    transform:translateX(-80px);
-  }
-}
-
-/* 점수 */
-#score{
+.star{
   position:absolute;
-  top:20px;
-  left:20px;
 
-  z-index:100;
+  color:#efb9c6;
+
+  font-size:14px;
+
+  animation:twinkle 2s infinite;
+}
+
+@keyframes twinkle{
+
+  0%{
+    opacity:.3;
+  }
+
+  50%{
+    opacity:1;
+  }
+
+  100%{
+    opacity:.3;
+  }
+}
+
+/* 화면 */
+
+.screen{
+  position:absolute;
+  inset:0;
+
+  display:none;
+
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+
+  padding:32px;
+
+  text-align:center;
+
+  z-index:5;
+}
+
+.active{
+  display:flex;
+}
+
+/* 타이틀 */
+
+.title{
+
+  font-size:58px;
+
+  color:#d694a2;
+
+  font-family:cursive;
+
+  margin-bottom:14px;
+}
+
+.subtitle{
+
+  color:#b48691;
+
+  line-height:1.7;
+
+  font-size:19px;
+
+  margin-bottom:28px;
+}
+
+/* 버튼 */
+
+.btn{
+
+  border:none;
 
   background:white;
-  color:#ff4f87;
+
+  color:#cf8e9d;
+
+  padding:16px 34px;
+
+  border-radius:999px;
+
+  font-size:20px;
+  font-weight:600;
+
+  margin-top:24px;
+
+  box-shadow:
+  0 4px 12px rgba(225,170,182,.25);
+}
+
+/* 캐릭터 */
+
+.character{
+
+  font-size:92px;
+
+  margin:16px 0;
+}
+
+/* 게임 UI */
+
+#score{
+
+  position:absolute;
+
+  top:24px;
+  left:24px;
+
+  z-index:10;
+
+  background:white;
 
   padding:10px 20px;
 
   border-radius:999px;
 
-  font-weight:bold;
-  font-size:24px;
+  color:#cf8e9d;
+
+  font-weight:700;
+}
+
+#goal{
+
+  position:absolute;
+
+  top:24px;
+  right:24px;
+
+  z-index:10;
+
+  background:white;
+
+  padding:10px 20px;
+
+  border-radius:999px;
+
+  color:#cf8e9d;
+
+  font-weight:700;
 }
 
 /* 바닥 */
+
 #ground{
+
   position:absolute;
+
   bottom:0;
+
   width:100%;
   height:140px;
 
-  background:#ff7fa8;
+  background:#f5c4cf;
 
-  z-index:2;
+  border-top:
+  3px dashed #fff;
 }
 
 /* 플레이어 */
-#player{
-  position:absolute;
 
-  width:90px;
-  height:90px;
+#player{
+
+  position:absolute;
 
   left:60px;
   bottom:140px;
 
-  display:flex;
-  justify-content:center;
-  align-items:center;
-
-  font-size:60px;
+  font-size:64px;
 
   z-index:10;
 
   animation:run .35s infinite alternate;
 }
 
-/* 뛰는 느낌 */
 @keyframes run{
 
   from{
-    transform:translateY(0px) rotate(-3deg);
+    transform:translateY(0px);
   }
 
   to{
-    transform:translateY(-8px) rotate(3deg);
+    transform:translateY(-8px);
   }
 }
 
 /* 장애물 */
+
 .thorn{
+
   position:absolute;
 
-  width:50px;
-  height:50px;
-
   bottom:140px;
-  right:-60px;
 
-  display:flex;
-  justify-content:center;
-  align-items:center;
-
-  font-size:40px;
+  font-size:58px;
 
   z-index:5;
 }
 
 /* 장미 */
+
 .rose{
+
   position:absolute;
 
-  top:-50px;
+  bottom:220px;
 
-  font-size:28px;
+  font-size:42px;
 
-  animation:fall linear forwards;
+  z-index:5;
 }
 
-@keyframes fall{
-  to{
-    transform:translateY(1000px) rotate(360deg);
-  }
-}
+/* 설명창 */
 
-/* 화면 */
-.overlay{
-  position:absolute;
-  inset:0;
+.storyBox{
 
-  background:rgba(255,255,255,.92);
+  background:
+  rgba(255,255,255,.75);
 
-  z-index:999;
+  border:
+  2px solid #f1d4dc;
 
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
+  border-radius:26px;
 
-  text-align:center;
+  padding:24px;
 
-  padding:30px;
-}
+  line-height:1.8;
 
-.overlay h1{
-  color:#ff4f87;
-  font-size:55px;
-  margin-bottom:20px;
-}
+  font-size:20px;
 
-.overlay p{
-  color:#444;
-  line-height:1.5;
-  font-size:22px;
-  margin-bottom:30px;
-}
+  color:#9c717d;
 
-button{
-  border:none;
-
-  background:#ff4f87;
-  color:white;
-
-  padding:16px 35px;
-
-  border-radius:999px;
-
-  font-size:22px;
-  font-weight:bold;
+  width:100%;
 }
 
 </style>
@@ -226,66 +315,148 @@ button{
 
 <div id="game">
 
-  <!-- 점수 -->
-  <div id="score">🌹 0</div>
+<!-- 별 -->
 
-  <!-- 시작 -->
-  <div id="startScreen" class="overlay">
+<div class="star" style="top:80px; left:40px;">✦</div>
+<div class="star" style="top:130px; right:70px;">✦</div>
+<div class="star" style="top:260px; left:80px;">✦</div>
+<div class="star" style="bottom:180px; right:40px;">✦</div>
+<div class="star" style="bottom:250px; left:60px;">✦</div>
 
-    <h1>🌹 ROSE RUN 🌹</h1>
+<!-- 시작 -->
 
-    <p>
-      장미 가시를 피해<br>
-      로즈데이를 성공하세요 💖
-    </p>
+<div id="startScreen"
+class="screen active">
 
-    <button onclick="startGame()">
-      START
-    </button>
+<div class="title">
+Rose Run
+</div>
 
-  </div>
+<div class="subtitle">
 
-  <!-- 게임오버 -->
-  <div id="gameOverScreen"
-       class="overlay"
-       style="display:none;">
+준이는 오늘 잠이 오지 않았어요 ☁️
 
-    <h1>💔 GAME OVER</h1>
+</div>
 
-    <p>
-      장미가 시들어버렸어요...
-    </p>
+<div class="character">
+🥺
+</div>
 
-    <button onclick="location.reload()">
-      다시하기
-    </button>
+<div class="storyBox">
 
-  </div>
+“타올이 없으니까 잠이 안 와...”<br>
+“엄마 보고 싶다...”
 
-  <!-- 성공 -->
-  <div id="clearScreen"
-       class="overlay"
-       style="display:none;">
+</div>
 
-    <h1>🌹 SUCCESS 🌹</h1>
+<button class="btn"
+onclick="startStory()">
 
-    <p>
-      양준이가 장미 전달에 성공했습니다 💖
-    </p>
+장미 전해주러 가기 🌹
 
-    <button onclick="location.reload()">
-      한번 더 하기
-    </button>
+</button>
 
-  </div>
+</div>
 
-  <!-- 플레이어 -->
-  <div id="player">
-    🌹🏃
-  </div>
+<!-- 게임 -->
 
-  <!-- 바닥 -->
-  <div id="ground"></div>
+<div id="gameScreen"
+class="screen">
+
+<div id="score">
+🌹 0
+</div>
+
+<div id="goal">
+300까지 달리기
+</div>
+
+<div id="player">
+🏃🏻🌹
+</div>
+
+<div id="ground"></div>
+
+</div>
+
+<!-- 성공 -->
+
+<div id="clearScreen"
+class="screen">
+
+<div class="title"
+style="font-size:42px;">
+
+🌹 CLEAR 🌹
+
+</div>
+
+<div class="character">
+😊
+</div>
+
+<div class="storyBox">
+
+주희가 무사히 장미를 전달했어요 💗<br><br>
+
+준이는 정말 행복해졌어요.<br><br>
+
+“고마워...”<br>
+“대신 소원권 10장 줄게.”
+
+</div>
+
+<div style="
+margin-top:28px;
+font-size:28px;
+color:#d6909f;
+">
+
+🎫 소원권 x10 획득
+
+</div>
+
+<button class="btn"
+onclick="location.reload()">
+
+처음으로
+
+</button>
+
+</div>
+
+<!-- 실패 -->
+
+<div id="failScreen"
+class="screen">
+
+<div class="title"
+style="font-size:42px;">
+
+💔 GAME OVER
+
+</div>
+
+<div class="character">
+🥀
+</div>
+
+<div class="storyBox">
+
+장미가 가시에 걸려버렸어요...<br><br>
+
+준이는 아직 슬퍼보여요 ☁️
+
+</div>
+
+<button class="btn"
+onclick="location.reload()">
+
+다시하기
+
+</button>
+
+</div>
 
 </div>
 
@@ -294,223 +465,256 @@ button{
 const player =
 document.getElementById("player");
 
-const game =
-document.getElementById("game");
+const gameScreen =
+document.getElementById("gameScreen");
 
 const scoreUI =
 document.getElementById("score");
 
-const startScreen =
-document.getElementById("startScreen");
-
-const gameOverScreen =
-document.getElementById("gameOverScreen");
-
-const clearScreen =
-document.getElementById("clearScreen");
-
 let score = 0;
 
 let gameStarted = false;
-let dead = false;
+
 let jumping = false;
 
-const goal = 300;
+let dead = false;
+
+/* 화면 */
+
+function showScreen(id){
+
+document
+.querySelectorAll(".screen")
+.forEach(screen=>{
+
+screen.classList.remove("active");
+
+});
+
+document
+.getElementById(id)
+.classList.add("active");
+
+}
+
+/* 시작 */
+
+function startStory(){
+
+showScreen("gameScreen");
+
+gameStarted = true;
+
+spawnObstacle();
+
+spawnRose();
+
+scoreLoop();
+
+}
 
 /* 점프 */
 
 function jump(){
 
-  if(jumping || dead || !gameStarted)
-    return;
+if(!gameStarted || jumping || dead)
+return;
 
-  jumping = true;
+jumping = true;
 
-  let y = 140;
+let y = 140;
 
-  let velocity = 16;
+let velocity = 16;
 
-  let gravity = 0.8;
+let gravity = 0.8;
 
-  const jumpLoop = setInterval(()=>{
+const jumpLoop = setInterval(()=>{
 
-    velocity -= gravity;
+velocity -= gravity;
 
-    y += velocity;
+y += velocity;
 
-    if(y <= 140){
+if(y <= 140){
 
-      y = 140;
+y = 140;
 
-      clearInterval(jumpLoop);
+clearInterval(jumpLoop);
 
-      jumping = false;
-    }
+jumping = false;
 
-    player.style.bottom = y + "px";
-
-  },20);
 }
 
-/* 시작 */
+player.style.bottom = y + "px";
 
-function startGame(){
+},20);
 
-  gameStarted = true;
-
-  startScreen.style.display = "none";
-
-  obstacleLoop();
-
-  scoreLoop();
 }
 
 /* 점수 */
 
 function scoreLoop(){
 
-  const loop = setInterval(()=>{
+const loop = setInterval(()=>{
 
-    if(dead){
+if(dead){
 
-      clearInterval(loop);
+clearInterval(loop);
 
-      return;
-    }
+return;
 
-    score++;
+}
 
-    scoreUI.innerHTML =
-      `🌹 ${score}`;
+score++;
 
-    if(score >= goal){
+scoreUI.innerHTML =
+`🌹 ${score}`;
 
-      clearInterval(loop);
+if(score >= 300){
 
-      gameStarted = false;
+clearInterval(loop);
 
-      clearScreen.style.display =
-        "flex";
-    }
+gameStarted = false;
 
-  },100);
+showScreen("clearScreen");
+
+}
+
+},100);
+
 }
 
 /* 장애물 */
 
-function obstacleLoop(){
+function spawnObstacle(){
 
-  if(dead || !gameStarted)
-    return;
+if(dead || !gameStarted)
+return;
 
-  const thorn =
-    document.createElement("div");
+const thorn =
+document.createElement("div");
 
-  thorn.classList.add("thorn");
+thorn.classList.add("thorn");
 
-  thorn.innerHTML = "🌵";
+thorn.innerHTML = "🪵";
 
-  game.appendChild(thorn);
+gameScreen.appendChild(thorn);
 
-  let x = 430;
+let x = 430;
 
-  const move = setInterval(()=>{
+const move = setInterval(()=>{
 
-    if(dead){
+if(dead){
 
-      clearInterval(move);
+clearInterval(move);
 
-      thorn.remove();
+thorn.remove();
 
-      return;
-    }
+return;
 
-    x -= 7;
-
-    thorn.style.left = x + "px";
-
-    /* 충돌 */
-
-    const playerY =
-      parseInt(player.style.bottom || 140);
-
-    if(
-      x < 120 &&
-      x > 40 &&
-      playerY < 210
-    ){
-
-      dead = true;
-
-      gameOverScreen.style.display =
-        "flex";
-
-      clearInterval(move);
-    }
-
-    if(x < -100){
-
-      clearInterval(move);
-
-      thorn.remove();
-    }
-
-  },20);
-
-  setTimeout(
-    obstacleLoop,
-    Math.random()*1200 + 1000
-  );
 }
 
-/* 장미 떨어짐 */
+x -= 7;
 
-setInterval(()=>{
+thorn.style.left = x + "px";
 
-  if(dead) return;
+const playerY =
+parseInt(player.style.bottom || 140);
 
-  const rose =
-    document.createElement("div");
+if(
+x < 120 &&
+x > 40 &&
+playerY < 210
+){
 
-  rose.classList.add("rose");
+dead = true;
 
-  rose.innerHTML = "🌹";
+showScreen("failScreen");
 
-  rose.style.left =
-    Math.random()*400 + "px";
+}
 
-  rose.style.animationDuration =
-    Math.random()*3 + 2 + "s";
+if(x < -100){
 
-  game.appendChild(rose);
+clearInterval(move);
 
-  setTimeout(()=>{
-    rose.remove();
-  },5000);
+thorn.remove();
 
-},500);
+}
+
+},20);
+
+setTimeout(
+spawnObstacle,
+Math.random()*1200 + 1000
+);
+
+}
+
+/* 장미 */
+
+function spawnRose(){
+
+if(dead || !gameStarted)
+return;
+
+const rose =
+document.createElement("div");
+
+rose.classList.add("rose");
+
+rose.innerHTML = "🌹";
+
+gameScreen.appendChild(rose);
+
+let x = 430;
+
+rose.style.left = x + "px";
+
+const move = setInterval(()=>{
+
+x -= 6;
+
+rose.style.left = x + "px";
+
+if(x < -100){
+
+clearInterval(move);
+
+rose.remove();
+
+}
+
+},20);
+
+setTimeout(
+spawnRose,
+1200
+);
+
+}
 
 /* 입력 */
 
 window.addEventListener(
-  "keydown",
-  (e)=>{
+"keydown",
+(e)=>{
 
-    if(e.code === "Space"){
+if(e.code === "Space"){
 
-      jump();
-    }
-  }
+jump();
+
+}
+
+}
 );
 
 window.addEventListener(
-  "touchstart",
-  jump
+"touchstart",
+jump
 );
 
 window.addEventListener(
-  "mousedown",
-  jump
+"mousedown",
+jump
 );
 
 </script>
