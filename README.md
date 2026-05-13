@@ -10,139 +10,110 @@
     --main-pink: #f9d5db;
     --dark-pink: #d8909f;
     --line-pink: #e4aab7;
-    --text-brown: #9a6f79;
+    --white: #ffffff;
   }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  
   body {
     background: var(--bg-pink);
     display: flex; justify-content: center; align-items: center;
     height: 100vh; overflow: hidden;
   }
 
-  /* 이미지 비율에 맞춘 컨테이너 (430x880 추정 비율) */
+  /* 전체 게임 프레임: 비율 최적화 */
   #game-frame {
-    width: 430px;
-    height: 880px;
-    max-width: 100vw;
-    max-height: 100vh;
+    width: 100%;
+    max-width: 430px;
+    height: 95vh; /* 버튼이 안 잘리도록 여유 공간 확보 */
     background: #fff;
     position: relative;
-    border: 10px solid #fff;
+    border: 8px solid #fff;
     outline: 2px solid var(--line-pink);
     border-radius: 40px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
   }
 
-  /* 배경 장식 */
   .inner-bg {
-    position: absolute;
-    inset: 0;
-    background: url("https://i.imgur.com/2iG9Z6X.png") center/cover; /* 원본 느낌 배경 */
-    opacity: 0.15;
-    z-index: 0;
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at center, #fff 0%, var(--bg-pink) 100%);
+    opacity: 0.5; z-index: 0;
   }
 
-  /* 상단 UI 정보 */
+  /* 상단 HUD */
   .hud {
-    position: relative;
-    z-index: 2;
-    padding: 60px 20px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    position: relative; z-index: 2;
+    padding: 40px 20px 10px;
+    display: flex; justify-content: space-between; align-items: center;
   }
 
   .rose-counter {
-    background: #fff;
-    border: 1.5px solid var(--line-pink);
-    padding: 5px 15px;
-    border-radius: 10px;
-    color: var(--dark-pink);
-    font-weight: bold;
-    font-size: 14px;
+    background: #fff; border: 2px solid var(--line-pink);
+    padding: 6px 15px; border-radius: 12px;
+    color: var(--dark-pink); font-weight: bold; font-size: 14px;
+    box-shadow: 0 2px 0 var(--line-pink);
   }
 
-  .fever-bar {
-    width: 150px;
-    height: 18px;
-    background: #fff;
-    border: 1.5px solid var(--line-pink);
-    border-radius: 10px;
-    overflow: hidden;
+  .fever-container {
+    width: 140px; height: 22px;
+    background: #fff; border: 2px solid var(--line-pink);
+    border-radius: 11px; padding: 2px;
   }
 
   .fever-fill {
-    width: 40%;
-    height: 100%;
-    background: var(--main-pink);
+    width: 60%; height: 100%;
+    background: linear-gradient(to right, var(--main-pink), var(--dark-pink));
+    border-radius: 8px;
   }
 
-  /* 캐릭터 렌더링 영역 */
+  /* 캐릭터 스테이지 */
   .stage {
-    flex: 1;
-    position: relative;
-    z-index: 1;
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    padding-bottom: 150px;
+    flex: 1; position: relative; z-index: 1;
+    display: flex; justify-content: center; align-items: center;
   }
 
-  /* 직접 코드로 그린 준이 캐릭터 (SVG) */
-  .character-svg {
-    width: 180px;
-    height: auto;
-    filter: drop-shadow(2px 4px 0px rgba(228, 170, 183, 0.3));
-    animation: run 0.6s infinite alternate ease-in-out;
+  /* 정교하게 다시 그린 준이 캐릭터 */
+  .character-wrap {
+    width: 220px; height: 300px;
+    display: flex; justify-content: center; align-items: center;
+    animation: bounce 0.8s infinite ease-in-out;
   }
 
-  @keyframes run {
-    0% { transform: translateY(0) rotate(-2deg); }
-    100% { transform: translateY(-10px) rotate(2deg); }
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
   }
 
-  /* 하단 컨트롤 레이아웃 */
+  /* 하단 컨트롤 레이아웃: 잘림 방지 */
   .controls {
-    position: relative;
-    z-index: 2;
-    padding: 30px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: rgba(255, 255, 255, 0.4);
-    border-top: 2px dashed var(--line-pink);
+    position: relative; z-index: 2;
+    padding: 20px 25px 40px;
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 15px;
   }
 
-  .btn-round {
-    width: 85px;
-    height: 85px;
-    background: #fff;
-    border: 2px solid var(--line-pink);
+  .btn-circle {
+    width: 75px; height: 75px;
+    background: #fff; border: 2px solid var(--line-pink);
     border-radius: 50%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    color: var(--dark-pink);
-    font-weight: bold;
-    font-size: 13px;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    color: var(--dark-pink); font-weight: bold; font-size: 11px;
     box-shadow: 0 4px 0 var(--line-pink);
+    cursor: pointer;
   }
 
   .btn-start {
-    padding: 15px 40px;
-    background: #fff;
-    border: 2px solid var(--line-pink);
-    border-radius: 15px;
-    color: var(--dark-pink);
-    font-size: 24px;
-    font-weight: bold;
+    flex: 1; height: 65px;
+    background: #fff; border: 2px solid var(--line-pink);
+    border-radius: 18px;
+    color: var(--dark-pink); font-size: 22px; font-weight: 800;
     box-shadow: 0 5px 0 var(--line-pink);
+    cursor: pointer;
+    display: flex; justify-content: center; align-items: center;
   }
-
 </style>
 </head>
 <body>
@@ -152,39 +123,51 @@
   
   <div class="hud">
     <div class="rose-counter">🌹 125 / 300</div>
-    <div class="fever-bar"><div class="fever-fill"></div></div>
-    <div style="color:var(--line-pink); font-size: 24px;">||</div>
+    <div class="fever-container"><div class="fever-fill"></div></div>
+    <div style="font-size: 22px; color: var(--dark-pink);">⏸</div>
   </div>
 
   <div class="stage">
-    <!-- 이미지 속 소년 캐릭터를 SVG 코드로 재현 -->
-    <svg class="character-svg" viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
-      <!-- 머리 -->
-      <path d="M30 40 Q30 20 50 20 Q70 20 70 40 L70 55 Q50 60 30 55 Z" fill="#f5d5c5" stroke="#ba8a95" stroke-width="1.5"/>
-      <!-- 머리카락 -->
-      <path d="M30 45 Q25 35 35 25 Q45 15 55 20 Q65 15 75 30 Q75 45 65 50 Q50 48 30 45" fill="#e9c4b5" stroke="#ba8a95" stroke-width="1.5"/>
-      <!-- 눈/볼 -->
-      <circle cx="62" cy="42" r="2" fill="#5c4a44"/>
-      <circle cx="68" cy="46" r="3" fill="#f9d5db" opacity="0.6"/>
-      <!-- 몸통 (멜빵) -->
-      <path d="M40 55 L65 55 L70 85 L35 85 Z" fill="#fff" stroke="#ba8a95" stroke-width="1.5"/>
-      <rect x="42" y="55" width="3" height="30" fill="#e4aab7"/>
-      <rect x="60" y="55" width="3" height="30" fill="#e4aab7"/>
-      <!-- 팔/장미 -->
-      <path d="M65 65 Q80 65 85 75" fill="none" stroke="#ba8a95" stroke-width="2"/>
-      <text x="75" y="80" font-size="15">💐</text>
-      <!-- 다리 -->
-      <rect x="40" y="85" width="8" height="15" rx="2" fill="#f5d5c5" stroke="#ba8a95" stroke-width="1.5"/>
-      <rect x="58" y="85" width="8" height="15" rx="2" fill="#f5d5c5" stroke="#ba8a95" stroke-width="1.5"/>
-      <path d="M35 100 H50 V105 H35 Z" fill="#fff" stroke="#ba8a95" stroke-width="1"/>
-      <path d="M55 100 H70 V105 H55 Z" fill="#fff" stroke="#ba8a95" stroke-width="1"/>
-    </svg>
+    <div class="character-wrap">
+      <!-- 픽셀 아트 준이를 정교하게 재현한 SVG -->
+      <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+        <!-- 머리카락 (뒷머리) -->
+        <path d="M25 45 Q20 30 35 20 Q50 10 65 20 Q80 30 75 45" fill="#e9c4b5" stroke="#9a6f79" stroke-width="1.2"/>
+        <!-- 얼굴 -->
+        <rect x="30" y="35" width="40" height="35" rx="10" fill="#fbe3d6" stroke="#9a6f79" stroke-width="1.2"/>
+        <!-- 머리카락 (앞머리) -->
+        <path d="M30 40 Q35 30 45 35 Q55 30 65 35 Q70 40 70 45 L30 45 Z" fill="#e9c4b5" stroke="#9a6f79" stroke-width="1.2"/>
+        <!-- 눈 -->
+        <circle cx="62" cy="52" r="1.5" fill="#5c4a44"/>
+        <!-- 홍조 -->
+        <circle cx="66" cy="58" r="3" fill="#f9d5db" opacity="0.7"/>
+        <!-- 몸통 (셔츠) -->
+        <rect x="38" y="70" width="24" height="25" fill="#fff" stroke="#9a6f79" stroke-width="1.2"/>
+        <!-- 멜빵바지 -->
+        <path d="M38 82 H62 V95 H38 Z" fill="#f9d5db" stroke="#9a6f79" stroke-width="1.2"/>
+        <rect x="42" y="70" width="3" height="12" fill="#d8909f"/>
+        <rect x="55" y="70" width="3" height="12" fill="#d8909f"/>
+        <!-- 팔과 꽃다발 -->
+        <path d="M62 78 Q75 78 80 85" fill="none" stroke="#fbe3d6" stroke-width="4" stroke-linecap="round"/>
+        <g transform="translate(75, 80) scale(0.6)">
+            <circle cx="10" cy="10" r="8" fill="#ff99aa"/>
+            <circle cx="15" cy="5" r="8" fill="#ffb3cc"/>
+            <rect x="10" y="15" width="4" height="12" fill="#aacc99" transform="rotate(-20)"/>
+        </g>
+        <!-- 다리 -->
+        <rect x="40" y="95" width="8" height="12" fill="#fbe3d6" stroke="#9a6f79" stroke-width="1.2"/>
+        <rect x="52" y="95" width="8" height="12" fill="#fbe3d6" stroke="#9a6f79" stroke-width="1.2"/>
+        <!-- 신발 -->
+        <path d="M36 107 H48 V112 H36 Z" fill="#fff" stroke="#9a6f79" stroke-width="1.2"/>
+        <path d="M52 107 H64 V112 H52 Z" fill="#fff" stroke="#9a6f79" stroke-width="1.2"/>
+      </svg>
+    </div>
   </div>
 
   <div class="controls">
-    <div class="btn-round">JUMP<br>🎀</div>
+    <div class="btn-circle">JUMP<br>🎀</div>
     <div class="btn-start">START</div>
-    <div class="btn-round">SLIDE<br>🎀</div>
+    <div class="btn-circle">SLIDE<br>🎀</div>
   </div>
 </div>
 
